@@ -1,10 +1,3 @@
-//
-//  gotudaTests.swift
-//  gotudaTests
-//
-//  Created by Ekaterina Grigorenko on 12.08.2023.
-//
-
 import XCTest
 @testable import gotuda
 

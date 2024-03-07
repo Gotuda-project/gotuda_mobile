@@ -3,6 +3,8 @@ import Foundation
 
 class ViewController: UIViewController {
     
+    // MARK: Private properties
+    
     private let logo = {
         let logo = UIImageView()
         logo.image = UIImage(named: "MainLogo")
@@ -43,6 +45,8 @@ class ViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    // MARK: UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()

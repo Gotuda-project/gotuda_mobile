@@ -1,10 +1,3 @@
-//
-//  gotudaUITests.swift
-//  gotudaUITests
-//
-//  Created by Ekaterina Grigorenko on 12.08.2023.
-//
-
 import XCTest
 
 final class gotudaUITests: XCTestCase {
