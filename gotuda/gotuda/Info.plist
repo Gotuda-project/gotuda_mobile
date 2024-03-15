@@ -28,6 +28,7 @@
 		<string>Montserrat-Medium.ttf</string>
 		<string>Montserrat-Italic.ttf</string>
 		<string>Montserrat-Thin.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
