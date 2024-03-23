@@ -12,7 +12,7 @@ struct RegistrationView: View {
         } else if currentScreen == .code {
             RegistrationCodeView(currentScreen: $currentScreen)
         }  else if currentScreen == .form {
-            Text("FORM")
+            RegistrationCreateUserView()
         }
     }
     
