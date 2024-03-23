@@ -4,30 +4,37 @@ struct InputView: View {
     private let title: String
     private let subtitle: String?
     private let inputMock: String
+    private let isRequired: Bool
     @Binding private var input: String
     
     init(
         title: String,
         subtitle: String?,
         inputMock: String,
+        isRequired: Bool = false,
         input: Binding<String> = .constant("")
     ) {
         self.title = title
         self.subtitle = subtitle
         self.inputMock = inputMock
+        self.isRequired = isRequired
         self._input = input
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(title)
-                .font(.montserrat(.bold, size: 16))
+            HStack(spacing: 0) {
+                Text(title)
+                    .font(.montserrat(.bold, size: 16))
+                if isRequired {
+                    Text("*")
+                        .font(.montserrat(.bold, size: 16))
+                        .foregroundStyle(.red)
+                }
+            }
 //            Spacer()
             if let subtitle {
-                Text(subtitle)
-                    .foregroundStyle(.gray)
-                    .font(.montserrat(.regular, size: 12))
-                    .padding([.bottom], 20)
+                InputSubheader(subtitle)
             } else {
                 Spacer()
             }
@@ -47,4 +54,9 @@ struct OvalTextFieldStyle: TextFieldStyle {
             .font(.montserrat(.regular, size: 14))
             .shadow(color: .gray.opacity(0.5), radius: 5, y: 5)
     }
+}
+
+#Preview {
+    InputView(title: "Имя", subtitle: "Введи свое имя", inputMock: "Иван", isRequired: true
+    )
 }
