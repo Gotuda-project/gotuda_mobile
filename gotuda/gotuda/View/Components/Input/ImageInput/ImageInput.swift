@@ -9,9 +9,11 @@ import SwiftUI
 
 struct ImageInput: View {
     private let isRequired: Bool
+    @Binding var image: UIImage?
     
-    init(isRequired: Bool = false) {
+    init(isRequired: Bool = false, image: Binding<UIImage?>) {
         self.isRequired = isRequired
+        self._image = image
     }
     
     var body: some View {
@@ -20,7 +22,7 @@ struct ImageInput: View {
             
             InputSubheader("Выбери фото из галереи")
             
-            ImageInputField()
+            ImageInputField(image: $image)
             
         }.padding([.leading, .trailing], 30)
             .padding([.top, .bottom], 10)
@@ -28,10 +30,6 @@ struct ImageInput: View {
 }
 
 
-
-#Preview {
-    ImageInput()
-}
 
 
 

@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct DateInput: View {
-    @State private var birthdate: Date?
+    @Binding private var birthdate: Date?
     private let isRequired: Bool
     
     init(
-        birthdate: Date,
+        birthdate: Binding<Date?>,
         isRequired: Bool = false
     ) {
         self.isRequired = isRequired
-        self.birthdate = birthdate
+        self._birthdate = birthdate
     }
     
     var body: some View {
@@ -35,8 +35,5 @@ struct DateInput: View {
     }
 }
 
-#Preview {
-    DateInput(birthdate: Date())
-}
 
 

@@ -9,12 +9,17 @@ import SwiftUI
 
 struct ImageInputField: View {
     
-    @State var image = UIImage()
+    @Binding var image: UIImage?
     @State var isPickerShow = false
+    
+    init(image: Binding<UIImage?>, isPickerShow: Bool = false) {
+        self._image = image
+        self.isPickerShow = isPickerShow
+    }
 
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-            Image(uiImage: image)
+            Image(uiImage: image ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 100, height: 100)
@@ -38,8 +43,4 @@ struct ImageInputField: View {
             }
         }
     }
-}
-
-#Preview {
-    ImageInputField()
 }

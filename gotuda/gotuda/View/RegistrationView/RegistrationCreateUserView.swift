@@ -1,9 +1,13 @@
 import SwiftUI
 
 struct RegistrationCreateUserView: View {
+    @EnvironmentObject var store: AppStore
+    
     @State private var name: String = ""
     @State private var surname: String = ""
-    @State private var birthday: Date = Date()
+    @State private var password: String = ""
+    @State private var birthday: Date? = Date()
+    @State private var image: UIImage? = nil
     
     var body: some View {
         VStack {
@@ -24,17 +28,30 @@ struct RegistrationCreateUserView: View {
                     input: $surname
                 )
                 DateInput(
-                    birthdate: birthday,
+                    birthdate: $birthday,
                     isRequired: true
                 )
                 
-                ImageInput()
+                SecureInputView("Пароль", text: $password)
+                
+                ImageInput(image: $image)
                 Spacer()
                 
             }
             Group {
                 ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                     LargeButton(title: "Далее") {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "dd.MM.yyyy"
+                        let date = formatter.string(from: birthday ?? Date())
+                        store.dispatch(makeRegister(request: RegisterByPhoneRequest(
+                            firstName: name,
+                            lastName: surname,
+                            birthdate: date,
+                            phoneNumber: store.state.phone?.digits,
+                            password: password,
+                            confirmationPhoneToken: store.state.confirmationPhoneToken
+                        )))
                     }.padding([.leading, .trailing], 30)
                 }
             }

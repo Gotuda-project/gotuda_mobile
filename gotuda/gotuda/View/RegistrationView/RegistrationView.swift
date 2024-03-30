@@ -2,6 +2,7 @@ import SwiftUI
 
 
 struct RegistrationView: View {
+    @EnvironmentObject var store: AppStore
     @State private var phone: String = ""
     @State private var password: String = ""
     
