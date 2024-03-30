@@ -1,6 +1,10 @@
 import SwiftUI
+import ReSwift
+
 
 struct RegistrationPhoneView: View {
+    @EnvironmentObject var store: AppStore
+    
     @State private var phone: String = ""
     @State private var password: String = ""
     
@@ -10,7 +14,7 @@ struct RegistrationPhoneView: View {
     }
     var body: some View {
         ScrollView {
-            InputView(
+            PhoneInputView(
                 title: "Номер телефона",
                 subtitle: "На который придет SMS с кодом",
                 inputMock: "+7 (912) 345-67-89",
@@ -19,7 +23,14 @@ struct RegistrationPhoneView: View {
             Spacer()
         }
         LargeButton(title: "Отправить код") {
-            self.currentScreen = .code
+            RegisterService.sendCode(phone: phone) { token in
+                if let token {
+                    self.store.dispatch(RegistrationAction.setTokenForConfirm(token))
+                    self.store.dispatch(RegistrationAction.setPhoneNumber(phone))
+                    self.currentScreen = .code
+                }
+            }
+            
         }.padding([.leading, .trailing], 30)
     }
 }

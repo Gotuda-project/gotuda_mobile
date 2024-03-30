@@ -1,0 +1,58 @@
+PODS:
+  - Alamofire (5.9.0)
+  - Moya (14.0.0):
+    - Moya/Core (= 14.0.0)
+  - Moya-ObjectMapper (2.9):
+    - Moya-ObjectMapper/Core (= 2.9)
+  - Moya-ObjectMapper/Core (2.9):
+    - Moya (~> 14.0.0-beta.6)
+    - ObjectMapper
+  - Moya-ObjectMapper/RxSwift (2.9):
+    - Moya-ObjectMapper/Core
+    - Moya/RxSwift
+    - RxSwift
+  - Moya/Core (14.0.0):
+    - Alamofire (~> 5.0)
+  - Moya/RxSwift (14.0.0):
+    - Moya/Core
+    - RxSwift (~> 5.0)
+  - ObjectMapper (4.2.0)
+  - ReSwift (6.1.1)
+  - ReSwiftThunk (2.0.1):
+    - ReSwift (~> 6.0)
+    - ReSwiftThunk/Core (= 2.0.1)
+  - ReSwiftThunk/Core (2.0.1):
+    - ReSwift (~> 6.0)
+  - RxSwift (5.1.3)
+
+DEPENDENCIES:
+  - Moya (~> 14.0)
+  - Moya-ObjectMapper
+  - Moya-ObjectMapper/RxSwift
+  - Moya/RxSwift
+  - ObjectMapper
+  - ReSwift
+  - ReSwiftThunk
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Moya
+    - Moya-ObjectMapper
+    - ObjectMapper
+    - ReSwift
+    - ReSwiftThunk
+    - RxSwift
+
+SPEC CHECKSUMS:
+  Alamofire: 02b772c9910e8eba1a079227c32fbd9e46c90a24
+  Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
+  Moya-ObjectMapper: 967a99d9ea3aa9c93ddbe112aeca3667f53bfe93
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
+  ReSwift: 929afd2c897f0d33c76c730710a31bb2d2a66713
+  ReSwiftThunk: 7ca5145764be6f30b62db88a52d170133954629e
+  RxSwift: 915abbdfb62214aa89ccd0b194d44fb478019b27
+
+PODFILE CHECKSUM: e59f45f74b299966f40927ac0049249f3a804fe6
+
+COCOAPODS: 1.12.1
