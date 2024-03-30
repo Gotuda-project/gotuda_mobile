@@ -33,7 +33,8 @@ extension RegisterEndpoint: TargetType {
         case .SendCode(let phone):
             return .requestParameters(parameters: ["phone": phone.digits], encoding: JSONEncoding.default)
         case .ConfirmCode(request: let request): return .requestParameters(parameters: request.toJSON(), encoding: JSONEncoding.default)
-        case .RegisterByPhone(request: let request): return .requestParameters(parameters: request.toJSON(), encoding: JSONEncoding.default)
+        case .RegisterByPhone(request: let request): 
+            return .requestParameters(parameters: request.toJSON(), encoding: JSONEncoding.default)
         }
         
     }
