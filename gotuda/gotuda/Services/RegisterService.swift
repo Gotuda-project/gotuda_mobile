@@ -8,47 +8,53 @@
 import Foundation
 import Moya
 import ObjectMapper
+import Moya_ObjectMapper
+import RxSwift
 
 
 class RegisterService {
+    
+    private let disposeBag = DisposeBag()
+    private let provider = MoyaProvider<RegisterEndpoint>()
+    static let shared = RegisterService()
+    private init() {
+        
+    }
+    func sendCode(phone: String,  completion: @escaping (String?) -> Void) {
+        provider.rx.request(.SendCode(phone: phone))
+            .mapObject(SendCodeModel.self)
+            .subscribe { sendCodeModel in
+                completion(sendCodeModel.tokenForConfirm)
+            } onError: { error in
+                completion(nil)
+                print(error)
+            }
+            .disposed(by: disposeBag)
 
-    static func sendCode(phone: String,  completion: @escaping (String?) -> Void) {
-        let provider = MoyaProvider<RegisterEndpoint>()
-        provider.request(.SendCode(phone: phone)) { result in
-            switch result {
-            case .success(let response):
-                let token = try? response.mapObject(SendCodeModel.self)
-                completion(token?.tokenForConfirm)
-            case .failure(let error):
-                print(error.errorDescription ?? "Unknown error")
-            }
-        }
     }
     
-    static func confirmCode(request: ConfirmCodeRequest, completion: @escaping (String?) -> Void) {
-        let provider = MoyaProvider<RegisterEndpoint>()
-        provider.request(.ConfirmCode(request: request)) { result in
-            switch result {
-            case .success(let response):
-                let token = try? response.mapObject(ConfirmCodeResponse.self)
-                completion(token?.confimationPhoneToken)
-            case .failure(let error):
-                print(error.errorDescription ?? "Unknown error")
-            }
-        }
+    func confirmCode(request: ConfirmCodeRequest, completion: @escaping (String?) -> Void) {
+        provider.rx.request(.ConfirmCode(request: request))
+            .mapObject(ConfirmCodeResponse.self)
+            .subscribe(onSuccess: { confirmCodeResponse in
+                completion(confirmCodeResponse.confimationPhoneToken)
+            }, onError: { error in
+                completion(nil)
+                print(error)
+            })
+            .disposed(by: disposeBag)
     }
     
-    static func register(request: RegisterByPhoneRequest, completion: @escaping (String?) -> Void) {
-        let provider = MoyaProvider<RegisterEndpoint>()
-        provider.request(.RegisterByPhone(request: request)) { result in
-            switch result {
-            case .success(let response):
-                let token = try? response.mapObject(RegisterByPhoneResponse.self)
-                completion(token?.token)
-            case .failure(let error):
-                print(error.errorDescription ?? "Unknown error")
-            }
-        }
+    func register(request: RegisterByPhoneRequest, completion: @escaping (String?) -> Void) {
+        provider.rx.request(.RegisterByPhone(request: request))
+            .mapObject(RegisterByPhoneResponse.self)
+            .subscribe(onSuccess: { registerByPhoneResponse in
+                completion(registerByPhoneResponse.token)
+            }, onError: { error in
+                completion(nil)
+                print(error)
+            })
+            .disposed(by: disposeBag)
     }
     
 }

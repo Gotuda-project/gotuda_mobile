@@ -12,7 +12,7 @@ end
 target 'gotuda' do
 use_frameworks!
 	pod 'ReSwift'
-	pod 'Moya', '~> 14.0'
+	pod 'Moya'
 	pod 'ReSwiftThunk'
 	pod 'Moya-ObjectMapper'
 	pod 'ObjectMapper'

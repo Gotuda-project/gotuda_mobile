@@ -23,7 +23,7 @@ struct RegistrationPhoneView: View {
             Spacer()
         }
         LargeButton(title: "Отправить код") {
-            RegisterService.sendCode(phone: phone) { token in
+            RegisterService.shared.sendCode(phone: phone) { token in
                 if let token {
                     self.store.dispatch(RegistrationAction.setTokenForConfirm(token))
                     self.store.dispatch(RegistrationAction.setPhoneNumber(phone))
