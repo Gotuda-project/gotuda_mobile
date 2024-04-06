@@ -12,7 +12,7 @@ struct RegistrationCodeView: View {
         ScrollView {
             Spacer()
             CodeInput() { code in
-                RegisterService.confirmCode(request: ConfirmCodeRequest(code: code, token: store.state.tokenForConfirm)) { token in
+                RegisterService.shared.confirmCode(request: ConfirmCodeRequest(code: code, token: store.state.tokenForConfirm)) { token in
                     if let token {
                         self.store.dispatch(RegistrationAction.setConfirmationPhoneToken(token))
                         self.currentScreen = .form

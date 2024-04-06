@@ -11,7 +11,7 @@ import ReSwiftThunk
 
 func makeRegister(request: RegisterByPhoneRequest) -> Thunk<AppState> {
     return Thunk<AppState> { dispatch, getState in
-        RegisterService.register(request: request) { token in
+        RegisterService.shared.register(request: request) { token in
             if let token {
                 dispatch(RegistrationAction.setToken(token))
             }
