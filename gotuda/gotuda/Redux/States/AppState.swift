@@ -17,12 +17,18 @@ enum AppStateAction: Action {
 
 func mainReducer(action: Action, state: AppState?) -> AppState {
     var state = state ?? AppState()
-
-    guard let action = action as? RegistrationAction else {
+    switch action {
+    case let action as RegistrationAction:
+        return registerReducer(action: action, state: state)
+    case let action as AuthAction:
+        return authReducer(action: action, state: state)
+    default:
         return state
     }
+}
 
-
+func registerReducer(action: RegistrationAction, state: AppState) -> AppState {
+    var state = state
     switch action {
 
     case .setTokenForConfirm(let token):
@@ -33,6 +39,17 @@ func mainReducer(action: Action, state: AppState?) -> AppState {
         state.token = token
     case .setPhoneNumber(let phone):
         state.phone = phone
+    }
+
+    return state
+}
+
+func authReducer(action: AuthAction, state: AppState) -> AppState {
+    var state = state
+    switch action {
+
+    case .setAuthToken(let token):
+        state.token = token
     }
 
     return state

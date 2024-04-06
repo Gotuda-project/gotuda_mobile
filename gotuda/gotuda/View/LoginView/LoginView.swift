@@ -13,13 +13,23 @@ struct LoginView: View {
     @State private var password: String = ""
     var body: some View {
         ScrollView() {
-            InputView(
-                    title: "Номер телефона", subtitle: nil, inputMock: "+7 (912) 345-67-89", input: $phone
-                )
+            PhoneInputView(
+                title: "Номер телефона", subtitle: nil, inputMock: "+7 (912) 345-67-89", input: $phone
+            )
             Spacer()
             SecureInputView("Пароль", text: $password)
         }
-        NavigationButton(title: "Войти")
+        LargeButton(title: "Войти")  {
+            AuthService.shared.login(
+                request: LoginRequest(
+                    phone: phone.digits,
+                    password: password)) { token in
+                        if let token {
+                            self.store.dispatch(AuthAction.setAuthToken(token))
+                        }
+                    }
+        }
+
     }
 }
 

@@ -44,7 +44,11 @@ struct PhoneInputView: View {
                 .prefixHidden(false)
                 .autofillPrefix(true)
                 .maximumDigits(10)
-                .textFieldStyle(OvalTextFieldStyle()).textContentType(.oneTimeCode)
+                .padding()
+                .background(LinearGradient(gradient: Gradient(colors: [Color.white, Color.white]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                .cornerRadius(10)
+                .font(.montserrat(.regular, size: 14))
+                .shadow(color: .gray.opacity(0.5), radius: 5, y: 5)
         }.padding([.leading, .trailing], 30)
             .padding([.top, .bottom], 10)
     }
