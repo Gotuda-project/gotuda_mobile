@@ -14,7 +14,7 @@ struct gotudaApp: App {
             if store.state.token == nil {
                 StartView().environmentObject(store)
             } else {
-                Spacer()
+                MainView()
             }
             
         }
