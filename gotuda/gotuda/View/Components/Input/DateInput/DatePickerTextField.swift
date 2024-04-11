@@ -11,18 +11,27 @@ struct DatePickerTextField: UIViewRepresentable {
     private let textField = UITextField()
     private let datePicker = UIDatePicker()
     private let helper = Helper()
-    private let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        return dateFormatter
-    }()
+    private let dateFormatter = DateFormatter()
     
     public var placeholder: String
     @Binding public var date: Date?
+    public var datePickerMode: UIDatePicker.Mode
+    public var dateFormat: String
+    
+    init(placeholder: String, date: Binding<Date?>, datePickerMode: UIDatePicker.Mode, dateFormat: String) {
+        self.placeholder = placeholder
+        self._date = date
+        self.datePickerMode = datePickerMode
+        self.dateFormat = dateFormat
+        dateFormatter.dateFormat = dateFormat
+    }
     
     func makeUIView(context: Context) -> UITextField {
-        datePicker.datePickerMode = .date
+        datePicker.datePickerMode = datePickerMode
         datePicker.preferredDatePickerStyle = .wheels
+        if datePickerMode == .dateAndTime {
+            datePicker.minimumDate = Date()
+        }
         datePicker.addTarget(helper, action: #selector(helper.dateValueChanged), for: .valueChanged)
         textField.font = UIFont(name: "Montserrat-Regular", size: 14)
         

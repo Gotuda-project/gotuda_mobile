@@ -28,7 +28,12 @@ struct RegistrationCreateUserView: View {
                     input: $surname
                 )
                 DateInput(
+                    title: "День рождения",
+                    subtitle: "День рождения",
+                    placeholder: "07.08.2003",
                     birthdate: $birthday,
+                    dateFormat: "dd.MM.yyyy",
+                    datePickerMode: .date,
                     isRequired: true
                 )
                 
