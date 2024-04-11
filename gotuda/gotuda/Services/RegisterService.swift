@@ -21,6 +21,7 @@ class RegisterService {
         
     }
     func sendCode(phone: String,  completion: @escaping (String?) -> Void) {
+
         provider.rx.request(.SendCode(phone: phone))
             .mapObject(SendCodeModel.self)
             .subscribe { sendCodeModel in

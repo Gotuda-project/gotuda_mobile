@@ -8,11 +8,12 @@ enum TabType: Int {
 }
 
 struct MainView: View {
+    @EnvironmentObject var store: AppStore
     @State private var selectedTab: TabType = .main
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Text("CreateEvent").tabItem {
+            MainCreateEventView().tabItem {
                 Image(selectedTab == .createEvent ? "createEventActive" : "createEventInactive")
             }.tag(TabType.createEvent)
             
@@ -23,10 +24,6 @@ struct MainView: View {
             Text("Profile").tabItem {
                 Image(selectedTab == .profile ? "profileTabActive" : "profileTabInactive")
             }.tag(TabType.profile)
-        }
+        }.safeAreaPadding()
     }
-}
-
-#Preview {
-    MainView()
 }

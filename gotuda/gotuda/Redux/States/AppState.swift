@@ -8,6 +8,8 @@ struct AppState: Equatable {
     var confirmationPhoneToken: String? = nil
     var token: String? = nil
     var phone: String? = nil
+    var categories: [Category] = []
+    var showCreateOrder: Bool = true
 }
 
 enum AppStateAction: Action {
@@ -22,6 +24,10 @@ func mainReducer(action: Action, state: AppState?) -> AppState {
         return registerReducer(action: action, state: state)
     case let action as AuthAction:
         return authReducer(action: action, state: state)
+    case let action as CategoryAction:
+        return categoryReducer(action: action, state: state)
+    case let action as EventAction:
+        return eventReducer(action: action, state: state)
     default:
         return state
     }
@@ -52,6 +58,28 @@ func authReducer(action: AuthAction, state: AppState) -> AppState {
         state.token = token
     }
 
+    return state
+}
+
+func categoryReducer(action: CategoryAction, state: AppState) -> AppState {
+    var state = state
+    switch action {
+    case .setCategories(let categories):
+        state.categories = categories
+    }
+    
+    return state
+}
+
+func eventReducer(action: EventAction, state: AppState) -> AppState {
+    var state = state
+    switch action {
+    case .successCreate:
+        state.showCreateOrder = false
+    case .returnToCreate:
+        state.showCreateOrder = true
+    }
+    
     return state
 }
 
