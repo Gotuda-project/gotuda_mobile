@@ -21,7 +21,6 @@ struct EventView: View {
         self.event = event
     }
     var body: some View {
-        NavigationLink(destination: EmptyView()) {
             VStack {
                 HStack(alignment: .top) {
                     ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
@@ -94,7 +93,8 @@ struct EventView: View {
                         Text(event.address)
                             .font(.montserrat(.regular, size: 10))
                         Spacer()
-                    }.frame(maxWidth: .infinity)
+                        Spacer()
+                    }
                     
                     HStack {
                         Spacer()
@@ -119,52 +119,8 @@ struct EventView: View {
                     
                 }.frame(maxWidth: .infinity)
             }
-        }
-
     }
     
-}
-
-struct LikeView: View {
-    @State var isLiked: Bool = false
-    var body: some View {
-        Button {
-            print("like")
-            isLiked.toggle()
-        } label: {
-            isLiked
-            ? Image(systemName: "heart.fill")
-                .resizable()
-                .frame(width: 20.0, height: 18.0)
-                .foregroundColor(.pink)
-            : Image(systemName: "heart")
-                .resizable()
-                .frame(width: 20.0, height: 18.0)
-                .foregroundColor(.black)
-        }.clipped()
-    }
-}
-
-struct VisitView: View {
-    var body: some View {
-        Button {
-            print("Tap")
-        } label: {
-            Text("Хочу пойти")
-                .font(.montserrat(.regular, size: 14))
-                .padding([.top, .bottom], 13.5)
-                .padding([.leading, .trailing], 20)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [.linearGradient1, .linearGradient2]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(10)
-                .foregroundColor(.white)
-        }.clipped()
-    }
 }
 
 #Preview {

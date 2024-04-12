@@ -15,7 +15,13 @@ struct FeedView: View {
     var body: some View {
         NavigationView {
             List(eventListVM.events, id:\.id) { event in
-                EventView(event: event).frame(maxWidth: .infinity)
+                ZStack {
+                    EventView(event: event).frame(maxWidth: .infinity)
+                    NavigationLink(destination: EmptyView()) {
+                                    EmptyView()
+                    }.opacity(0)
+                }
+                
             }.listSectionSpacing(5)
                 .searchable(text: $searchText)
                 .onChange(of: searchText) { oldValue, newValue in
