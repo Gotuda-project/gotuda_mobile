@@ -2,7 +2,7 @@ import Moya
 
 enum EventEndpoint {
     case CreateEvent(request: CreateEventRequest)
-    case GetEvents
+    case GetEvents(searchText: String)
 }
 
 extension EventEndpoint: TargetType {
@@ -23,7 +23,7 @@ extension EventEndpoint: TargetType {
     
     var method: Method {
         switch self {
-        case .CreateEvent(let request):
+        case .CreateEvent(_):
                 .post
         case .GetEvents:
                 .get
@@ -39,8 +39,8 @@ extension EventEndpoint: TargetType {
         switch self {
         case .CreateEvent(let request):
             return .requestParameters(parameters: request.toJSON(), encoding: JSONEncoding.default)
-        case .GetEvents:
-            return .requestPlain
+        case .GetEvents(let searchText):
+            return .requestParameters(parameters: ["text_search": searchText], encoding: URLEncoding.default)
         }
     }
 }
