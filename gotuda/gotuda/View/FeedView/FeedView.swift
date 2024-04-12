@@ -4,6 +4,7 @@ import SwiftUI
 struct FeedView: View {
     private let token: String?
     @StateObject private var eventListVM: EventListViewModel
+    @State private var searchText: String = ""
     
     init(token: String?) {
         self._eventListVM = StateObject(wrappedValue: EventListViewModel(token: token))
@@ -16,6 +17,10 @@ struct FeedView: View {
             List(eventListVM.events, id:\.id) { event in
                 EventView(event: event).frame(maxWidth: .infinity)
             }.listSectionSpacing(5)
+                .searchable(text: $searchText)
+                .onChange(of: searchText) { oldValue, newValue in
+                    eventListVM.search(token: token, searchText: newValue)
+                }
         }
     }
 }

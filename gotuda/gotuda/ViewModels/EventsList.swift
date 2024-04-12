@@ -7,12 +7,12 @@ class EventListViewModel: ObservableObject {
     
     init(token: String?) {
         self.events = []
-        self.search(token: token, text: "")
+        self.search(token: token, searchText: "")
     }
     
-    func search(token: String?, text: String) {
+    func search(token: String?, searchText: String) {
         guard let token else {return}
-        EventService.shared.getEvents(token: token) { events in
+        EventService.shared.getEvents(token: token, searchText: searchText) { events in
             self.events = EventsMapper.map(events: events)
         }
     }
