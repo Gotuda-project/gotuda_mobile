@@ -24,15 +24,36 @@ class EventsMapper {
             EventModel(
                 id: event.id ?? 0,
                 title: event.title ?? "",
-                user: String(event.userId ?? 0),
-                date: event.eventDatetime?.datetime ?? "",
+                user: mapAuthor(author: event.author),
+                date: mapDate(date: event.eventDatetime?.datetime),
                 vibes: mapVibes(vibes: event.vibes),
-                userImage: nil,
+                userImage: URL(string: event.author?.avatar ?? ""),
                 eventImage: URL(string: event.images?.urlToImages?[0].urlToImage ?? ""),
                 address: mapAddress(address: event.address),
                 categories: event.categories ?? []
             )
         }
+    }
+    
+    private static func mapDate(date: String?) -> String {
+        guard let date  else { return ""}
+        print("[DEBUG] \(date)")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let dateDate = dateFormatter.date(from: date)
+        guard let dateDate else { return "" }
+        
+        print("[DEBUG] \(dateDate)")
+        
+        let anotherDateFormatter = DateFormatter()
+        anotherDateFormatter.dateFormat = "dd.MM.yyyy hh:mm"
+        print("[DEBUG] \(anotherDateFormatter.string(from: dateDate))")
+        return anotherDateFormatter.string(from: dateDate)
+    }
+    
+    private static func mapAuthor(author: Author?) -> String {
+        guard let author else { return "" }
+        return (author.firstName ?? "") + " " + (author.lastName ?? "")
     }
     
     private static func mapVibes(vibes: [String]?) -> String {
