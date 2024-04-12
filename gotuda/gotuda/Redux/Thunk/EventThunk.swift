@@ -9,7 +9,7 @@ func makeEvent(
         ImageService.shared.saveImage(image: image, token: token) { imageResponse in
             if let id = imageResponse?.idImage {
                 let newRequest = CreateEventRequest(title: request.title, description: request.description, address: request.address, eventDatetime: request.eventDatetime, categories: request.categories, vibes: request.vibes,
-                                                    images: CreateEventRequest.Images(ids: [id], mainImageIndex: 0)
+                                                    images: Images(ids: [id], mainImageIndex: 0)
                 )
                 EventService.shared.createEvent(request: newRequest, token: token) {
                     dispatch(EventAction.successCreate)

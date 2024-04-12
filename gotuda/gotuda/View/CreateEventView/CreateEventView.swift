@@ -123,12 +123,12 @@ struct CreateEventView: View {
                     request: CreateEventRequest(
                         title: title,
                         description: description,
-                        address: CreateEventRequest.Address(
+                        address: Address(
                             country: country,
                             city: city,
                             address: address
                         ),
-                        eventDatetime: CreateEventRequest.EventDatetime(
+                        eventDatetime: EventDatetime(
                             maxVisitors: Int(maxVisitors) ?? 20,
                             datetime: date
                         ),

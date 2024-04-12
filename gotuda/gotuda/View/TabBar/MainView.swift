@@ -17,7 +17,7 @@ struct MainView: View {
                 Image(selectedTab == .createEvent ? "createEventActive" : "createEventInactive")
             }.tag(TabType.createEvent)
             
-            Text("Main").tabItem {
+            FeedView(token: store.state.token).tabItem {
                 Image(selectedTab == .main ? "mainTabActive" : "mainTabInactive")
             }.tag(TabType.main)
             
