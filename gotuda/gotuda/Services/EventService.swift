@@ -30,5 +30,20 @@ class EventService {
 
     }
     
+    func getEvents(token: String, completion: @escaping ([Event]) -> Void) {
+        let endpointClosure = { (target: EventEndpoint) -> Endpoint in
+            let defaultEndpoint = MoyaProvider.defaultEndpointMapping(for: target)
+            return defaultEndpoint.adding(newHTTPHeaderFields: ["Authorization": "Bearer " + token])
+        }
+        let provider = MoyaProvider<EventEndpoint>(endpointClosure: endpointClosure)
+        return provider.rx.request(.GetEvents)
+            .mapObject(GetEventResponse.self)
+            .subscribe { response in
+                completion(response.events ?? [])
+            } onError: { error in
+                print(error)
+            }.disposed(by: disposeBag)
+    }
+    
 }
 

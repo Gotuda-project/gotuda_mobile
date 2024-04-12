@@ -2,6 +2,7 @@ import Moya
 
 enum EventEndpoint {
     case CreateEvent(request: CreateEventRequest)
+    case GetEvents
 }
 
 extension EventEndpoint: TargetType {
@@ -16,12 +17,18 @@ extension EventEndpoint: TargetType {
     
     var path: String {
         switch self {
-        case .CreateEvent: return "/api/v1/events"
+        case .CreateEvent, .GetEvents: return "/api/v1/events"
         }
     }
     
     var method: Method {
-        .post
+        switch self {
+        case .CreateEvent(let request):
+                .post
+        case .GetEvents:
+                .get
+        }
+        
     }
     
     var sampleData: Data {
@@ -30,10 +37,10 @@ extension EventEndpoint: TargetType {
     
     var task: Task {
         switch self {
-        case .CreateEvent(let request): 
-            print(request)
-            print(request.toJSONString(prettyPrint: true))
+        case .CreateEvent(let request):
             return .requestParameters(parameters: request.toJSON(), encoding: JSONEncoding.default)
+        case .GetEvents:
+            return .requestPlain
         }
     }
 }
