@@ -21,9 +21,9 @@ struct MainView: View {
                 Image(selectedTab == .main ? "mainTabActive" : "mainTabInactive")
             }.tag(TabType.main)
             
-            Text("Profile").tabItem {
+            ProfileView(token: store.state.token).tabItem {
                 Image(selectedTab == .profile ? "profileTabActive" : "profileTabInactive")
-            }.tag(TabType.profile)
-        }.safeAreaPadding()
+            }.tag(TabType.profile).frame(maxWidth: .infinity)
+        }
     }
 }

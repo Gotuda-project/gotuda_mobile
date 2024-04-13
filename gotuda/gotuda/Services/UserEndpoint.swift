@@ -2,6 +2,7 @@ import Moya
 
 enum UserEndpoint {
     case CreateAvatar(imageData: Data)
+    case GetMe
 }
 
 extension UserEndpoint: TargetType {
@@ -17,6 +18,7 @@ extension UserEndpoint: TargetType {
     var path: String {
         switch self {
         case .CreateAvatar: return "/api/v1/users/me/avatar"
+        case .GetMe: return "/api/v1/users/me"
         }
     }
     
@@ -24,6 +26,8 @@ extension UserEndpoint: TargetType {
         switch self {
         case .CreateAvatar:
                 .post
+        case .GetMe:
+                .get
         }
         
     }
@@ -38,6 +42,8 @@ extension UserEndpoint: TargetType {
             // image want to upload it or file as a MultipartFormData
             let imageDataProvider = Moya.MultipartFormData(provider: MultipartFormData.FormDataProvider.data(imageData), name: "image", fileName: "photo.jpg", mimeType: "image/jpeg")
             return [ imageDataProvider]
+        case .GetMe:
+            return []
         }
     }
     
@@ -45,6 +51,8 @@ extension UserEndpoint: TargetType {
         switch self {
         case .CreateAvatar(let imageData):
             return .uploadMultipart(multipartBody!)
+        case .GetMe:
+            return .requestPlain
         }
     }
 }
