@@ -37,17 +37,13 @@ class EventsMapper {
     
     private static func mapDate(date: String?) -> String {
         guard let date  else { return ""}
-        print("[DEBUG] \(date)")
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let dateDate = dateFormatter.date(from: date)
         guard let dateDate else { return "" }
         
-        print("[DEBUG] \(dateDate)")
-        
         let anotherDateFormatter = DateFormatter()
         anotherDateFormatter.dateFormat = "dd.MM.yyyy hh:mm"
-        print("[DEBUG] \(anotherDateFormatter.string(from: dateDate))")
         return anotherDateFormatter.string(from: dateDate)
     }
     

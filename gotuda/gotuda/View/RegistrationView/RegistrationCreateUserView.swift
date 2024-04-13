@@ -56,7 +56,7 @@ struct RegistrationCreateUserView: View {
                             phoneNumber: store.state.phone?.digits,
                             password: password,
                             confirmationPhoneToken: store.state.confirmationPhoneToken
-                        )))
+                        ), image: image))
                     }.padding([.leading, .trailing], 30)
                 }
             }

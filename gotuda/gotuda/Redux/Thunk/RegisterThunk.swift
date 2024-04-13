@@ -9,11 +9,14 @@ import Foundation
 import ReSwift
 import ReSwiftThunk
 
-func makeRegister(request: RegisterByPhoneRequest) -> Thunk<AppState> {
+func makeRegister(request: RegisterByPhoneRequest, image: UIImage?) -> Thunk<AppState> {
     return Thunk<AppState> { dispatch, getState in
         RegisterService.shared.register(request: request) { token in
             if let token {
                 dispatch(RegistrationAction.setToken(token))
+                if let image {
+                    UserService.shared.createAvatar(image: image, token: token)
+                }
             }
         }
     }
