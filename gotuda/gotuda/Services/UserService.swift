@@ -30,4 +30,21 @@ class UserService {
 
     }
     
+    func getMe(token: String, completion: @escaping (UserResponse?) -> Void) {
+        let endpointClosure = { (target: UserEndpoint) -> Endpoint in
+            let defaultEndpoint = MoyaProvider.defaultEndpointMapping(for: target)
+            return defaultEndpoint.adding(newHTTPHeaderFields: ["Authorization": "Bearer " + token])
+        }
+        let provider = MoyaProvider<UserEndpoint>(endpointClosure: endpointClosure)
+        provider.rx.request(.GetMe)
+            .mapObject(UserResponse.self)
+            .subscribe { userResponse in
+                completion(userResponse)
+            } onError: { error in
+                completion(nil)
+                print(error)
+            }
+            .disposed(by: disposeBag)
+    }
+    
 }
