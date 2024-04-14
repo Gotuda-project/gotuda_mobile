@@ -10,6 +10,10 @@ struct AppState: Equatable {
     var phone: String? = nil
     var categories: [Category] = []
     var showCreateOrder: Bool = true
+    var likedEvents: Set<Int> = []
+    var removeLikeEvent: Set<Int> = []
+    var visitEvents: Set<Int> = []
+    var notVisitEvents: Set<Int> = []
 }
 
 enum AppStateAction: Action {
@@ -78,6 +82,18 @@ func eventReducer(action: EventAction, state: AppState) -> AppState {
         state.showCreateOrder = false
     case .returnToCreate:
         state.showCreateOrder = true
+    case .likeEvent(let eventId):
+        state.likedEvents.insert(eventId)
+        state.removeLikeEvent.remove(eventId)
+    case .deleteLike(let eventId):
+        state.removeLikeEvent.insert(eventId)
+        state.likedEvents.remove(eventId)
+    case .visitEvent(let eventId):
+        state.visitEvents.insert(eventId)
+        state.notVisitEvents.remove(eventId)
+    case .notVisitEvent(let eventId):
+        state.visitEvents.remove(eventId)
+        state.notVisitEvents.insert(eventId)
     }
     
     return state

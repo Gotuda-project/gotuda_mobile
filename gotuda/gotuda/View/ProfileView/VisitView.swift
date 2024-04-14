@@ -1,6 +1,7 @@
 import SwiftUI
 
-struct VisitView: View {
+struct VisitsView: View {
+    @EnvironmentObject var store: AppStore
     private let token: String?
     @StateObject private var visitVM: EventDatetimeListViewModel
     
@@ -16,13 +17,17 @@ struct VisitView: View {
             Text("Вы не записались на мероприятие").multilineTextAlignment(.center)
         }
         List(visitVM.visit, id:\.id) { event in
-            ZStack {
-                EventView(event: event).frame(maxWidth: .infinity)
-                NavigationLink(destination: EmptyView()) {
-                    EmptyView()
-                }.opacity(0)
+            if store.state.notVisitEvents.contains(event.id) {
+            } else {
+                ZStack {
+                    EventView(event: event, isVisited: true).frame(maxWidth: .infinity)
+                    NavigationLink(destination: EmptyView()) {
+                        EmptyView()
+                    }.opacity(0)
+                }
             }
-            
-        }.listSectionSpacing(5)
+        }.listSectionSpacing(5).onAppear {
+            visitVM.getVisit(token: token)
+        }
     }
 }

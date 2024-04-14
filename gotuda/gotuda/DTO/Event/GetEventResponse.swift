@@ -32,6 +32,8 @@ struct Event: Mappable {
         categories <- map["categories"]
         vibes <- map["vibes"]
         author <- map["author"]
+        isVisited <- map["is_visited"]
+        isLiked <- map["is_liked"]
     }
     
     var id: Int?
@@ -44,6 +46,8 @@ struct Event: Mappable {
     var categories: [String]?
     var vibes: [String]?
     var author: Author?
+    var isVisited: Bool?
+    var isLiked: Bool?
 }
 
 struct CreatedImages: Mappable {
@@ -80,7 +84,16 @@ struct Author: Mappable {
     
     var firstName: String?
     var lastName: String?
-    var avatar: String?
+    var avatar: Avatar?
+}
+
+struct Avatar: Mappable {
+    var urlToImage: String?
+    init?(map: ObjectMapper.Map) {}
+    
+    mutating func mapping(map: ObjectMapper.Map) {
+        urlToImage <- map["url_to_image"]
+    }
     
     
 }

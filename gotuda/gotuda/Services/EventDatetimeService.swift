@@ -31,4 +31,46 @@ class EventDatetimeService {
 
     }
     
+    func visitEvent(eventdId: Int, token: String?, completion: @escaping (Error?) -> Void) {
+        guard let token else {
+            completion(LikeError())
+            return
+        }
+        let endpointClosure = { (target: EventDatetimeEndpoint) -> Endpoint in
+            let defaultEndpoint = MoyaProvider.defaultEndpointMapping(for: target)
+            return defaultEndpoint.adding(newHTTPHeaderFields: ["Authorization": "Bearer " + token])
+        }
+        let provider = MoyaProvider<EventDatetimeEndpoint>(endpointClosure: endpointClosure)
+        provider.rx.request(.visitEvent(eventId: eventdId))
+            .subscribe { response in
+                completion(nil)
+            } onError: { error in
+                completion(error)
+                print(error)
+            }
+            .disposed(by: disposeBag)
+
+    }
+    
+    func nonVisitEvent(eventdId: Int, token: String?, completion: @escaping (Error?) -> Void) {
+        guard let token else {
+            completion(LikeError())
+            return
+        }
+        let endpointClosure = { (target: EventDatetimeEndpoint) -> Endpoint in
+            let defaultEndpoint = MoyaProvider.defaultEndpointMapping(for: target)
+            return defaultEndpoint.adding(newHTTPHeaderFields: ["Authorization": "Bearer " + token])
+        }
+        let provider = MoyaProvider<EventDatetimeEndpoint>(endpointClosure: endpointClosure)
+        provider.rx.request(.notVisitEvent(eventId: eventdId))
+            .subscribe { events in
+                completion(nil)
+            } onError: { error in
+                completion(error)
+                print(error)
+            }
+            .disposed(by: disposeBag)
+
+    }
+    
 }

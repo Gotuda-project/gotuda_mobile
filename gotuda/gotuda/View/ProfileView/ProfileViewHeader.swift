@@ -24,8 +24,9 @@ struct ProfileViewHeader: View {
                     .frame(width: 80, height: 80)
                     .clipShape(Circle())
             }) {
-                ProgressView().frame(width: 80, height: 80)
-                    .clipShape(Circle())
+                Color.linearGradient1
+                    .frame(width: 80, height: 80)
+                    .clipShape(Circle()).shimmering()
             }.frame(width: 80, height: 80)
             VStack(alignment: .leading) {
                 Text(profile?.lastName ?? "").font(.montserrat(.bold, size: 16))

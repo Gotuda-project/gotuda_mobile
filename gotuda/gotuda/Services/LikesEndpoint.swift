@@ -2,6 +2,8 @@ import Moya
 
 enum LikesEndpoint {
     case GetLikes
+    case SetLike(eventId: Int)
+    case DeleteLike(eventId: Int)
 }
 
 extension LikesEndpoint: TargetType {
@@ -17,11 +19,18 @@ extension LikesEndpoint: TargetType {
     var path: String {
         switch self {
         case .GetLikes: return "/api/v1/likes/events/me"
+        case .SetLike(let eventId): return "/api/v1/likes/events/\(eventId)"
+        case .DeleteLike(let eventId): return "/api/v1/likes/events/\(eventId)"
         }
     }
     
     var method: Method {
-        .get
+        switch self {
+        case .GetLikes: .get
+        case .SetLike(_): .post
+        case .DeleteLike(_): .delete
+        }
+        
     }
     
     var sampleData: Data {
@@ -30,7 +39,7 @@ extension LikesEndpoint: TargetType {
     
     var task: Task {
         switch self {
-        case .GetLikes: return .requestPlain
+        case .GetLikes, .SetLike(_), .DeleteLike(_): return .requestPlain
         }
     }
 }

@@ -15,22 +15,25 @@ class EventListViewModel: ObservableObject {
         EventService.shared.getEvents(token: token, searchText: searchText) { events in
             self.events = EventsMapper.map(events: events)
         }
+        objectWillChange.send()
     }
 }
 
 class EventsMapper {
     static func map(events: [Event]) -> [EventModel] {
-        events.map { event in
+        return events.map { event in
             EventModel(
                 id: event.id ?? 0,
                 title: event.title ?? "",
                 user: mapAuthor(author: event.author),
                 date: mapDate(date: event.eventDatetime?.datetime),
                 vibes: mapVibes(vibes: event.vibes),
-                userImage: URL(string: event.author?.avatar ?? ""),
+                userImage: URL(string: event.author?.avatar?.urlToImage ?? ""),
                 eventImage: URL(string: event.images?.urlToImages?[0].urlToImage ?? ""),
                 address: mapAddress(address: event.address),
-                categories: event.categories ?? []
+                categories: event.categories ?? [],
+                isLiked: event.isLiked ?? false,
+                isVisited: event.isVisited ?? false
             )
         }
     }
