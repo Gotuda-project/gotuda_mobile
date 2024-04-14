@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUI_Shimmer
 
 struct EventModel {
     let id: Int
@@ -10,15 +11,21 @@ struct EventModel {
     let eventImage: URL?
     let address: String
     let categories: [String]
+    var isLiked: Bool
+    let isVisited: Bool
 }
 
 struct EventView: View {
+    @EnvironmentObject var store: AppStore
     private let event: EventModel
+    private let isLiked: Bool
+    private let isVisited: Bool
     
-    @State var isLiked: Bool = false
     
-    init(event: EventModel) {
+    init(event: EventModel, isLiked: Bool? = nil, isVisited: Bool? = nil) {
         self.event = event
+        self.isLiked = isLiked ?? event.isLiked
+        self.isVisited = isVisited ?? event.isVisited
     }
     var body: some View {
             VStack {
@@ -32,9 +39,9 @@ struct EventView: View {
                         } placeholder: {
                             Color.linearGradient1
                                 .frame(width: 100, height: 100)
-                                .clipShape(Circle())
+                                .clipShape(Circle()).shimmering()
                         }
-                        
+                       
                         AsyncImage(url: event.userImage) { image in
                             image.resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -42,7 +49,7 @@ struct EventView: View {
                                 .clipShape(Circle())
                         } placeholder: {
                             Color.linearGradient2.frame(width: 50, height: 50)
-                                .clipShape(Circle())
+                                .clipShape(Circle()).shimmering()
                         }
                     }
                     VStack(alignment: .leading) {
@@ -78,14 +85,11 @@ struct EventView: View {
                             }
                         }
                     }.frame(maxWidth: .infinity)
-                    
-                    Image(systemName: isLiked ? "heart.fill" : "heart")
-                        .resizable()
-                        .frame(width: 20.0, height: 18.0)
-                        .foregroundColor(isLiked ? .pink : .black).onTapGesture {
-                            print("like")
-                            isLiked.toggle()
-                        }
+                        
+                    LikeView(
+                        isLiked: isLiked,
+                        id: event.id
+                    )
                 }.frame(maxWidth: .infinity)
                 ZStack {
                     HStack(spacing: 0) {
@@ -98,23 +102,7 @@ struct EventView: View {
                     
                     HStack {
                         Spacer()
-                        Text("Хочу пойти")
-                            .font(.montserrat(.regular, size: 14))
-                            .padding([.top, .bottom], 13.5)
-                            .padding([.leading, .trailing], 20)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(
-                                        colors:  [.linearGradient1, .linearGradient2]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .foregroundColor(.white)
-                            .cornerRadius(50)
-                            .onTapGesture {
-                                print("Tap")
-                            }
+                        VisitView(isVisit: isVisited, id: event.id)
                     }
                     
                 }.frame(maxWidth: .infinity)
@@ -122,6 +110,124 @@ struct EventView: View {
     }
     
 }
+
+struct LikeView: View {
+    @State var isLiked: Bool
+    @EnvironmentObject var store: AppStore
+    private let id: Int
+    
+    init(isLiked: Bool, id: Int) {
+        self.isLiked = isLiked
+        self.id = id
+    }
+    
+    var body: some View {
+        Image(systemName: isLiked ? "heart.fill" : "heart")
+            .resizable()
+            .frame(width: 20.0, height: 18.0)
+            .foregroundColor(isLiked ? .pink : .black).onTapGesture {
+                if !isLiked {
+                    LikesService.shared.setLike(eventId: id, token: store.state.token) { error in
+                        if error == nil {
+                            isLiked.toggle()
+                            store.dispatch(EventAction.likeEvent(eventId: id))
+                        }
+                    }
+                } else {
+                    LikesService.shared.deleteLike(eventId: id, token: store.state.token) { error in
+                        if error == nil {
+                            isLiked.toggle()
+                            store.dispatch(EventAction.deleteLike(eventId: id))
+                        }
+                    }
+                }
+            }
+    }
+}
+
+struct VisitView: View {
+    @State var isVisit: Bool
+    @EnvironmentObject var store: AppStore
+    private let id: Int
+    
+    init(isVisit: Bool, id: Int) {
+        self.isVisit = isVisit
+        self.id = id
+    }
+    
+    var body: some View {
+        if isVisit {
+            isVisitView(isVisit: $isVisit, id: id)
+        } else {
+            NotVisitView(isVisit: $isVisit, id: id)
+        }
+    }
+}
+
+struct isVisitView: View {
+    @Binding var isVisit: Bool
+    @EnvironmentObject var store: AppStore
+    private let id: Int
+    
+    init(isVisit: Binding<Bool>, id: Int) {
+        self._isVisit = isVisit
+        self.id = id
+    }
+    var body: some View {
+        Text("Записан").font(.montserrat(.regular, size: 14)).padding([.top, .bottom], 13.5).padding([.leading, .trailing], 20).overlay( RoundedRectangle(cornerRadius: 25)
+                               .stroke(LinearGradient(
+                                   gradient: Gradient(
+                                       colors:  [.linearGradient1, .linearGradient2]),
+                                   startPoint: .leading,
+                                   endPoint: .trailing
+                               ), lineWidth: 5)
+                     ).background(.white
+           ).onTapGesture {
+                         EventDatetimeService.shared.nonVisitEvent(eventdId: id, token: store.state.token) { error in
+                             if error ==  nil {
+                                 isVisit.toggle()
+                                 store.dispatch(EventAction.notVisitEvent(eventId: id))
+                             }
+                         }
+           }.foregroundColor(.black).cornerRadius(50)
+    }
+}
+
+struct NotVisitView: View {
+    @Binding var isVisit: Bool
+    @EnvironmentObject var store: AppStore
+    private let id: Int
+    
+    init(isVisit: Binding<Bool>, id: Int) {
+        self._isVisit = isVisit
+        self.id = id
+    }
+    var body: some View {
+        Text("Хочу пойти")
+            .font(.montserrat(.regular, size: 14))
+            .padding([.top, .bottom], 13.5)
+            .padding([.leading, .trailing], 20)
+            .background(
+                LinearGradient(
+                    gradient: Gradient(
+                        colors:  [.linearGradient1, .linearGradient2]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .foregroundColor(.white)
+            .cornerRadius(50)
+            .onTapGesture {
+                EventDatetimeService.shared.visitEvent(eventdId: id, token: store.state.token) { error in
+                    if error ==  nil {
+                        isVisit.toggle()
+                        store.dispatch(EventAction.visitEvent(eventId: id))
+                    }
+                }
+            }
+    }
+}
+
 
 #Preview {
     EventView(event: EventModel(
@@ -132,7 +238,9 @@ struct EventView: View {
         userImage: URL(string: "https://vip-1gl.ru/vipberrrt/10423beautiful_scenery_wallpaper.jpg"),
         eventImage:  URL(string: "https://vip-1gl.ru/vipberrrt/10423beautiful_scenery_wallpaper.jpg"),
         address: "г. Москва, Большая Спасская улица, 8sdfsdfsdfdsfsdfsdfdsfsfsdfsfsdf",
-        categories: ["прогулка", "бар"]
+        categories: ["прогулка", "бар"],
+        isLiked: false,
+        isVisited: false
     )
     )
 }

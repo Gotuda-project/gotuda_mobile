@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @EnvironmentObject var store: AppStore
     private let token: String?
     @StateObject private var profileVM: ProfileViewModel
     @State private var tab: String = "like"
@@ -12,23 +13,28 @@ struct ProfileView: View {
     }
     
     var body: some View {
-        ScrollView {
-            ProfileViewHeader(profile: profileVM.user).frame(maxWidth: .infinity).padding()
-            Spacer()
-            Picker(selection: $tab) {
-                Text("Избранное").tag("like")
-                Text("Уже записан").tag("visit")
-            } label: {
-                Text("Picker")
-            }.pickerStyle(SegmentedPickerStyle())
-            Spacer()
-            if tab == "like" {
-                FavoritesView(token: token)
-            } else {
-                VisitView(token: token)
-            }
+        GeometryReader { g in
+            ScrollView {
+                ProfileViewHeader(profile: profileVM.user).frame(maxWidth: .infinity).padding()
+                Spacer()
+                Picker(selection: $tab) {
+                    Text("Избранное").tag("like")
+                    Text("Уже записан").tag("visit")
+                } label: {
+                    Text("Picker")
+                }.pickerStyle(SegmentedPickerStyle())
+                Spacer()
+                if tab == "like" {
+                    FavoritesView(token: token).frame(width: g.size.width - 5, height: g.size.height - 10, alignment: .center)
+                } else {
+                    VisitsView(token: token).frame(width: g.size.width - 5, height: g.size.height - 10, alignment: .center)
+                }
 
-        }.frame(maxWidth: .infinity)
+            }.frame(maxWidth: .infinity).refreshable {
+                
+            }
+        }
+        
         
     }
 }

@@ -15,7 +15,7 @@ extension AuthEndpoint: TargetType {
     
     var path: String {
         switch self {
-        case .Login(let request): return "/api/v1/auth/login"
+        case .Login(_): return "/api/v1/auth/login"
         }
     }
     
